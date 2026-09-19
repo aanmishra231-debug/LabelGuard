@@ -232,6 +232,11 @@
   }
 
   // ---------- Field extraction (regex heuristics over OCR text) ----------
+  // Real labels rarely lay information out linearly — a legend/keyword can
+  // sit far from its actual value (e.g. "MRP (Incl. of all taxes)" printed
+  // as a legend, with the real price only appearing later in a separate
+  // batch-code box). So keyword presence and value presence are checked
+  // independently rather than requiring them to be close together.
   function extractFields(text) {
     const t = text.replace(/\r/g, '');
     const out = {};
@@ -239,16 +244,31 @@
     const qtyMatch = t.match(/(\d+(?:[.,]\d+)?)\s?(ml|mL|l|L|kg|Kg|KG|g|G|gm|gms|grams?|pieces?|pcs|pairs?)\b/);
     out.netQuantity = qtyMatch ? (qtyMatch[1] + ' ' + qtyMatch[2]) : null;
 
-    let mrpMatch = t.match(/mrp[^0-9]{0,12}([\d,]+(?:\.\d{1,2})?)/i);
-    if (!mrpMatch) mrpMatch = t.match(/(?:₹|rs\.?|inr)\s?([\d,]+(?:\.\d{1,2})?)/i);
+    // MRP: a currency-prefixed amount anywhere on the label is sufficient
+    // proof it's declared — don't require it to sit right next to "MRP".
+    let mrpMatch = t.match(/(?:₹|rs\.?|inr)\s?([\d,]+(?:\.\d{1,2})?)/i);
+    if (!mrpMatch) {
+      // Fallback: "MRP" keyword followed by a number within a generous window.
+      mrpMatch = t.match(/mrp[\s\S]{0,60}?([\d,]+(?:\.\d{1,2})?)/i);
+    }
     out.mrp = mrpMatch ? mrpMatch[1] : null;
 
-    out.manufacturer = /(manufactured by|manufacturer|packed by|packer|marketed by|mktd by|mfg\.?\s*by)/i.test(t);
+    // Manufacturer / packer / marketer — include common abbreviations
+    // ("Mfd. by", "Mfg. by") seen on real Indian packaging, not just the
+    // spelled-out "manufactured by".
+    out.manufacturer = /(manufactured by|manufacturer|packed by|packer|marketed by|mktd by|mfg\.?\s*by|mfd\.?\s*by)/i.test(t);
 
     const phoneMatch = t.match(/\b\d{10}\b|\b\d{3,4}[-\s]\d{6,7}\b/);
-    out.consumerCare = /(consumer care|customer care|toll[- ]?free|helpline)/i.test(t) || !!phoneMatch;
+    const emailMatch = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(t);
+    out.consumerCare = /(consumer care|customer care|toll[- ]?free|helpline|query|feedback)/i.test(t) || !!phoneMatch || emailMatch;
 
-    out.dates = /\b\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}\b/.test(t) || /(mfg|exp|best before|use by)[^\n]{0,25}/i.test(t);
+    // Dates: accept a full DD/MM/YYYY date, OR the compact MM/YY-style
+    // codes common on cosmetics batch boxes ("M 05/26", "U 10/28" for
+    // manufacture/use-before), OR an explicit keyword nearby a value.
+    const fullDate = /\b\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}\b/.test(t);
+    const shortCode = /\b[MU]\s?\d{1,2}\/\d{2,4}\b/i.test(t);
+    const keywordDate = /(mfg|exp|best before|use by|use before)[^\n]{0,40}/i.test(t);
+    out.dates = fullDate || shortCode || keywordDate;
 
     const sizeMatch = t.match(/\b(XXS|XS|S|M|L|XL|XXL|XXXL)\b/) || t.match(/size[:\s]*([0-9]{1,2})/i);
     out.size = sizeMatch ? sizeMatch[0] : null;
@@ -334,4 +354,3 @@
     resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 })();
-
