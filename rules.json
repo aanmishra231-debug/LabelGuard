@@ -1,0 +1,214 @@
+{
+  "_comment": "Rule database for LabelGuard. Sourced from the team's Legal Metrology research doc, section 5 (Product-Wise Information Matrix) and section 6 (Quantity Unit Detection). Edit this file to add categories or change requirements — no code changes needed. Always verify against the current official Legal Metrology Act 2009 / Packaged Commodities Rules 2011 (and amendments) before relying on this for real enforcement decisions.",
+
+  "fieldDefinitions": {
+    "productName": { "label": "Product Name", "autoCheckable": false },
+    "brand": { "label": "Brand", "autoCheckable": false },
+    "netQuantity": { "label": "Net Quantity", "autoCheckable": true },
+    "mrp": { "label": "MRP", "autoCheckable": true },
+    "manufacturer": { "label": "Manufacturer / Packer / Marketer", "autoCheckable": true },
+    "address": { "label": "Address", "autoCheckable": false },
+    "dates": { "label": "Applicable Dates (Mfg / Expiry / Best Before)", "autoCheckable": true },
+    "consumerCare": { "label": "Consumer Care Details", "autoCheckable": true },
+    "size": { "label": "Size", "autoCheckable": true },
+    "model": { "label": "Model / SKU Number", "autoCheckable": false },
+    "importer": { "label": "Importer Details", "autoCheckable": false },
+    "countryOfOrigin": { "label": "Country of Origin", "autoCheckable": false },
+    "components": { "label": "Component Products / Quantities", "autoCheckable": false }
+  },
+
+  "categories": [
+    {
+      "id": "cold_drink",
+      "label": "Cold Drink / Soft Drink",
+      "quantityUnit": "ml or L",
+      "requiredFields": ["productName", "brand", "netQuantity", "mrp", "manufacturer", "address", "dates", "consumerCare"]
+    },
+    {
+      "id": "packaged_water",
+      "label": "Packaged Water",
+      "quantityUnit": "ml or L",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address", "dates", "consumerCare"]
+    },
+    {
+      "id": "juice",
+      "label": "Juice",
+      "quantityUnit": "ml or L",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address", "dates"]
+    },
+    {
+      "id": "milk_beverage",
+      "label": "Milk / Beverage Pack",
+      "quantityUnit": "ml or L",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "dates"]
+    },
+    {
+      "id": "cooking_oil",
+      "label": "Cooking Oil",
+      "quantityUnit": "ml/L or g/kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "dates"]
+    },
+    {
+      "id": "biscuit",
+      "label": "Biscuit",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address", "dates"]
+    },
+    {
+      "id": "chips_namkeen",
+      "label": "Chips / Namkeen",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address", "dates"]
+    },
+    {
+      "id": "chocolate_candy",
+      "label": "Chocolate / Candy Pack",
+      "quantityUnit": "g or pieces",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "dates"]
+    },
+    {
+      "id": "rice",
+      "label": "Rice",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "dal_pulses",
+      "label": "Dal / Pulses",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "flour_atta",
+      "label": "Flour / Atta",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "sugar_salt",
+      "label": "Sugar / Salt",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "tea_coffee",
+      "label": "Tea / Coffee",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "dates"]
+    },
+    {
+      "id": "shampoo",
+      "label": "Shampoo",
+      "quantityUnit": "ml",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address", "dates"]
+    },
+    {
+      "id": "body_wash",
+      "label": "Body Wash",
+      "quantityUnit": "ml",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "face_wash",
+      "label": "Face Wash",
+      "quantityUnit": "ml or g",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "lotion_moisturizer",
+      "label": "Lotion / Moisturizer",
+      "quantityUnit": "ml or g",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "perfume",
+      "label": "Perfume",
+      "quantityUnit": "ml",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "soap",
+      "label": "Soap",
+      "quantityUnit": "g",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "toothpaste",
+      "label": "Toothpaste",
+      "quantityUnit": "g",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "detergent_powder",
+      "label": "Detergent Powder",
+      "quantityUnit": "g or kg",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "detergent_liquid",
+      "label": "Detergent Liquid",
+      "quantityUnit": "ml or L",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer", "address"]
+    },
+    {
+      "id": "garment",
+      "label": "Garment / Clothing",
+      "quantityUnit": "size / pieces",
+      "requiredFields": ["productName", "brand", "size", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "hosiery_socks",
+      "label": "Hosiery / Socks",
+      "quantityUnit": "pairs or pieces",
+      "requiredFields": ["productName", "size", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "footwear",
+      "label": "Shoes / Footwear",
+      "quantityUnit": "size and pair",
+      "requiredFields": ["productName", "size", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "toy",
+      "label": "Toy",
+      "quantityUnit": "pieces or set",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "electronics_accessory",
+      "label": "Electronics Accessory",
+      "quantityUnit": "piece/unit",
+      "requiredFields": ["productName", "model", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "mobile_accessory",
+      "label": "Mobile Accessory",
+      "quantityUnit": "piece/unit",
+      "requiredFields": ["productName", "model", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "stationery",
+      "label": "Stationery",
+      "quantityUnit": "pieces/set",
+      "requiredFields": ["productName", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "combo_pack",
+      "label": "Multi-piece / Combo Pack",
+      "quantityUnit": "pieces/set + component quantity",
+      "requiredFields": ["productName", "components", "netQuantity", "mrp", "manufacturer"]
+    },
+    {
+      "id": "imported_product",
+      "label": "Imported Product",
+      "quantityUnit": "depends on product type",
+      "requiredFields": ["productName", "importer", "countryOfOrigin", "mrp"]
+    },
+    {
+      "id": "wholesale_package",
+      "label": "Wholesale Package",
+      "quantityUnit": "depends on commodity",
+      "requiredFields": ["productName", "manufacturer", "netQuantity"]
+    }
+  ]
+}

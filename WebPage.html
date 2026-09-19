@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LabelGuard — Compliance Scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="mark">
+      <span class="tag">SIH 26034</span>
+    </div>
+    <h1>LabelGuard</h1>
+    <p>Select the product category, then upload one or more photos of the package — front, back, or side panels. The rule engine reads all of them together and checks against the required declarations for that category under the Legal Metrology (Packaged Commodities) Rules.</p>
+  </header>
+
+  <div class="panel">
+    <label class="field-label" for="categorySelect">Product category</label>
+    <select id="categorySelect">
+      <option value="" disabled selected>Loading categories…</option>
+    </select>
+    <div id="categoryMeta" class="category-meta hidden"></div>
+  </div>
+
+  <div class="panel">
+    <div id="dropzone" class="dropzone">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M12 4L7 9M12 4l5 5"/><path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
+      <div class="dz-title">Upload package images</div>
+      <div class="dz-sub">Click to browse, or drag photos here — add front, back and side panels of the same package</div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" multiple>
+
+    <div id="previewArea" class="hidden" style="margin-top:16px;">
+      <div class="preview-grid" id="previewGrid"></div>
+      <span class="replace" id="replaceBtn">Add more photos</span>
+      <button class="scan-btn" id="scanBtn" disabled>Select a category first</button>
+    </div>
+
+    <div id="statusArea" class="hidden">
+      <div class="status-row">
+        <span id="statusText">Loading OCR engine…</span>
+        <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+      </div>
+    </div>
+
+    <div id="errorArea" class="hidden"></div>
+  </div>
+
+  <div id="resultsPanel" class="panel hidden">
+    <div id="verdict" class="verdict">
+      <div class="dot"></div>
+      <div>
+        <div class="label" id="verdictLabel"></div>
+        <div class="sub" id="verdictSub"></div>
+      </div>
+    </div>
+
+    <p class="section-title">Automatically checked fields</p>
+    <div class="field-list" id="fieldListAuto"></div>
+
+    <div id="manualFieldsWrap" class="hidden">
+      <p class="section-title" style="margin-top:18px;">Requires manual verification</p>
+      <p class="manual-note">These fields matter for this category but aren't reliably checkable from OCR text alone — an inspector should confirm them.</p>
+      <div class="field-list muted" id="fieldListManual"></div>
+    </div>
+
+    <details class="raw">
+      <summary>View raw OCR text</summary>
+      <pre id="rawText"></pre>
+    </details>
+  </div>
+
+  <footer>Client-side OCR — your image is never uploaded to a server. Rule database: <code>rules.json</code>.</footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
