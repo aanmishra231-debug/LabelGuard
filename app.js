@@ -186,6 +186,32 @@
     errorArea.innerHTML = '';
   }
 
+  // ---------- Image normalization ----------
+  // Phone photos carry an EXIF orientation flag rather than physically
+  // rotated pixels. Browsers are inconsistent about honoring that flag when
+  // handing raw image bytes to something like Tesseract (as opposed to
+  // rendering it in an <img> tag), so the same photo can OCR fine in one
+  // browser and come out sideways/garbled in another. Fixing orientation
+  // ourselves, once, removes that inconsistency. We also upscale small
+  // images slightly since Tesseract accuracy drops on low-resolution input.
+  async function normalizeImage(file) {
+    try {
+      const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      const maxDim = Math.max(bitmap.width, bitmap.height);
+      const scale = maxDim < 1200 ? 1200 / maxDim : 1;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+      return blob || file;
+    } catch (err) {
+      console.warn('Image normalization failed, using original file as-is', err);
+      return file;
+    }
+  }
+
   async function runScan() {
     if (!currentFiles.length || !selectedCategory) return;
     clearError();
@@ -214,7 +240,8 @@
       for (let i = 0; i < currentFiles.length; i++) {
         statusText.textContent = 'Reading panel ' + (i + 1) + ' of ' + currentFiles.length + '…';
         barFill.style.width = Math.round(((i) / currentFiles.length) * 100) + '%';
-        const { data } = await worker.recognize(currentFiles[i]);
+        const normalized = await normalizeImage(currentFiles[i]);
+        const { data } = await worker.recognize(normalized);
         texts.push('--- Panel ' + (i + 1) + ' (' + currentFiles[i].name + ') ---\n' + (data.text || '').trim());
         confidences.push(data.confidence || 0);
       }
